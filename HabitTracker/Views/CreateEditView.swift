@@ -68,7 +68,7 @@ struct CreateEditView: View {
             Spacer()
             Text("select color:")
             HStack{
-                ForEach(ColorPalette.allCases, id: \.self) { labelColor in
+                ForEach(ColorPalette.labelColors, id: \.self) { labelColor in
                     ZStack{
                         Circle().fill(labelColor.color).onTapGesture{
                             selectedColor = labelColor

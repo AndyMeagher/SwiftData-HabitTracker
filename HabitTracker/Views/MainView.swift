@@ -8,17 +8,21 @@
 import SwiftUI
 
 struct MainView: View {
+    
     var body: some View {
-        TabView {
-            HomeView()
-                .tabItem {
-                    Image(systemName: "house")
-                }
-            HabitsView()
-                .tabItem {
-                    Image(systemName: "list.star")
-                }
-        }.tint(ColorPalette.navy.color)
+            TabView {
+                HomeView()
+                    .background(ColorPalette.pink.color)
+                    .tabItem {
+                        Image(systemName: "house")
+                    }
+                HabitsView()
+                    .background(ColorPalette.pink.color)
+                    .tabItem {
+                        Image(systemName: "list.star")
+                    }
+            }
+            .tint(ColorPalette.navy.color)
     }
 }
 

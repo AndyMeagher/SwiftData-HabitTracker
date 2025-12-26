@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import ConfettiSwiftUI
 
 struct HomeView: View {
     
@@ -15,7 +16,8 @@ struct HomeView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var habits: [Habit]
     @State private var showConfirmUndo = false
-
+    @State private var celebratedDates: [Date] = []
+    
     private var daysHabits: [Habit] {
         return habits.filter{
             $0.createdAt <= selectedDate &&
@@ -24,21 +26,25 @@ struct HomeView: View {
             })
         }
     }
-
+    
     private var completedDayHabits: [Habit] {
         return daysHabits.filter{$0.isCompleted(on: selectedDate)}
     }
     
     private var pendingDayHabits: [Habit] {
         return daysHabits.filter{ !$0.isCompleted(on: selectedDate)}
-
     }
-        
+    
     var availableDates : [Date] {
         let oldestDate = habits.map{$0.createdAt}.min() ?? Date()
         return Calendar.current.getDates(from: oldestDate)
     }
     
+    func checkCelebration(date: Date) {
+        if !self.celebratedDates.contains(date) && pendingDayHabits.isEmpty && !completedDayHabits.isEmpty{
+            self.celebratedDates.append(date)
+        }
+    }
     
     var body: some View {
         
@@ -50,42 +56,65 @@ struct HomeView: View {
                 Spacer()
             }
             DateListView(availableDates: availableDates, selectedDate: $selectedDate)
+            
             if pendingDayHabits.isEmpty && completedDayHabits.isEmpty {
-                Spacer()
-                Text("You haven't committed any habits for this date yet.").padding()
-                Spacer()
+                Text("You haven't committed any habits for this date yet.").padding(.vertical, 50)
             }else{
+                if pendingDayHabits.isEmpty  {
+                    Text("Congrats!\nYou've Completed all your habits for this day 🎉")
+                        .multilineTextAlignment(.center)
+                        .listRowSeparator(.hidden)
+                        .padding(.vertical, 50)
+                        .padding(.horizontal, 20)
+                        .listRowBackground(Color.clear)
+                        .onChange(of: selectedDate){ _, newVal in
+                            checkCelebration(date: newVal)
+                        }
+                        .onAppear{
+                            checkCelebration(date: selectedDate)
+                        }
+                        .confettiCannon(trigger: $celebratedDates)
+                }
                 List {
-                    Section(header: Text("To Do:")) {
-                        ForEach(pendingDayHabits) { habit in
-                            RoundedCard(title: habit.name, color: habit.labelColor.color, showCheckmark: false).onTapGesture {
-                                let _ = habit.addEntry(on: self.selectedDate)
+                    if !pendingDayHabits.isEmpty {
+                        Section(header:
+                                    Text("To Do:")
+                            .font(Font.custom("Copperplate", size: 20))
+                        ) {
+                            ForEach(pendingDayHabits) { habit in
+                                RoundedCard(title: habit.name, color: habit.labelColor.color, showCheckmark: false).onTapGesture {
+                                    let _ = habit.addEntry(on: self.selectedDate)
+                                }
                             }
+                            .listRowSeparator(.hidden)
+                            .listRowBackground(Color.clear)
                         }
                     }
-                    Section(header: Text("Completed:")) {
-                        ForEach(completedDayHabits) { habit in
-                            RoundedCard(title: habit.name, color: habit.labelColor.color, showCheckmark: true).onLongPressGesture {
-                                self.showConfirmUndo = true
-                            }.confirmationDialog(
-                                "Habit options",
-                                isPresented: $showConfirmUndo
-                            ) {
-                                Button("Undo Complete", role: .destructive) {
-                                    habit.entries.removeAll { entry in
-                                        entry.date == self.selectedDate
+                    
+                    if !completedDayHabits.isEmpty {
+                        Section(header: Text("Completed:").font(Font.custom("Copperplate", size: 20))) {
+                            ForEach(completedDayHabits) { habit in
+                                RoundedCard(title: habit.name, color: habit.labelColor.color, showCheckmark: true).onLongPressGesture {
+                                    self.showConfirmUndo = true
+                                }.swipeActions {
+                                    Button(role: .destructive) {
+                                        habit.entries.removeAll { entry in
+                                            return entry.date == self.selectedDate
+                                        }
+                                        try? modelContext.save()
+                                        celebratedDates.removeAll{ date in return date == self.selectedDate}
+                                    } label: {
+                                        Label("Undo", systemImage: "arrow.uturn.backward")
                                     }
-                                    self.showConfirmUndo = false
-                                }
-
-                                Button("Cancel", role: .cancel) {
-                                    self.showConfirmUndo = false
                                 }
                             }
+                            .listRowSeparator(.hidden)
+                            .listRowBackground(Color.clear)
                         }
                     }
                 }
                 .listStyle(.plain)
+                .background(Color.clear)
             }
             
         }

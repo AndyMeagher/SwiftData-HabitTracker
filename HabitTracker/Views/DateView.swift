@@ -27,11 +27,13 @@ struct DateListView: View {
                         }.id(date.hashValue)
                     }
                 }
-            }.onAppear {
+            }
+            .contentMargins(.trailing, 20, for: .scrollContent)
+            .scrollIndicators(.hidden)
+            .onAppear {
                 proxy.scrollTo(selectedDate.hashValue)
             }
         }
-        .padding(.horizontal)
     }
 }
 

@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		615C66E42EFF361800EA1C43 /* ConfettiSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 615C66E32EFF361800EA1C43 /* ConfettiSwiftUI */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		615C66482EF0BE7500EA1C43 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -52,6 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				615C66E42EFF361800EA1C43 /* ConfettiSwiftUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +83,7 @@
 				615C663C2EF0BE7400EA1C43 /* HabitTracker */,
 				615C664A2EF0BE7500EA1C43 /* HabitTrackerTests */,
 				615C66542EF0BE7500EA1C43 /* HabitTrackerUITests */,
+				615C66E22EFF361800EA1C43 /* Frameworks */,
 				615C663B2EF0BE7400EA1C43 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -90,6 +96,13 @@
 				615C66512EF0BE7500EA1C43 /* HabitTrackerUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		615C66E22EFF361800EA1C43 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -112,6 +125,7 @@
 			);
 			name = HabitTracker;
 			packageProductDependencies = (
+				615C66E32EFF361800EA1C43 /* ConfettiSwiftUI */,
 			);
 			productName = HabitTracker;
 			productReference = 615C663A2EF0BE7400EA1C43 /* HabitTracker.app */;
@@ -195,6 +209,9 @@
 			);
 			mainGroup = 615C66312EF0BE7400EA1C43;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				615C66C22EFF34C200EA1C43 /* XCRemoteSwiftPackageReference "ConfettiSwiftUI" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 615C663B2EF0BE7400EA1C43 /* Products */;
 			projectDirPath = "";
@@ -552,6 +569,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		615C66C22EFF34C200EA1C43 /* XCRemoteSwiftPackageReference "ConfettiSwiftUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/simibac/ConfettiSwiftUI.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.3;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		615C66E32EFF361800EA1C43 /* ConfettiSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 615C66C22EFF34C200EA1C43 /* XCRemoteSwiftPackageReference "ConfettiSwiftUI" */;
+			productName = ConfettiSwiftUI;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 615C66322EF0BE7400EA1C43 /* Project object */;
 }

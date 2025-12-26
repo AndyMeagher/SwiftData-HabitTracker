@@ -18,6 +18,7 @@ enum ColorPalette: String, CaseIterable, Codable {
     case purple
     case gray
     case indigo
+    case pink
 
     var id: String { rawValue }
 
@@ -32,6 +33,7 @@ enum ColorPalette: String, CaseIterable, Codable {
         case .brightBlue: return Color(hex: 0x0096ec)
         case .eucalyptus: return Color(hex: 0x5e7f62)
         case .navy: return Color(red: 0, green: 0, blue: 0.5)
+        case .pink: return Color(hex: 0xfcf8f8)
         case .indigo: return .indigo
         }
     }

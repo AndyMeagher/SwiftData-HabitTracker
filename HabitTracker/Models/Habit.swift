@@ -15,6 +15,7 @@ class Habit : Identifiable {
     var labelColor: ColorPalette
     var assignedDays: [DayOfWeek]
     var createdAt: Date
+    @Relationship(deleteRule: .cascade)
     var entries: [HabitEntry] = []
     
     init(name: String, labelColor: ColorPalette = .brightBlue, assignedDays: [DayOfWeek] = []) {

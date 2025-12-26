@@ -24,7 +24,7 @@ struct HabitsView: View {
     @Query var habits: [Habit]
     @State private var activeSheet: ActiveSheet?
     @Environment(\.modelContext) private var modelContext
-    
+
     var body: some View {
         VStack{
             HStack{
@@ -51,9 +51,8 @@ struct HabitsView: View {
                             }
                             .tint(.blue)
                         }
-                }
-            }
-            .listStyle(.plain)
+                }.listRowSeparator(.hidden)
+            }.listStyle(.plain)
             Spacer()
             Button(action: {
                 activeSheet = .create
