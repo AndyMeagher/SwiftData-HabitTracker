@@ -7,4 +7,4 @@ __Motivational Quote of the Day__: Networking layer with responses saved in loca
 __AI Agent Suggestion Picker__: Motivational coach to help you think of habits
 
 ### TODO: 
-Build out agent tools and clean up for accesibility and tessting
+Build out agent tools and clean up for accesibility and testing
