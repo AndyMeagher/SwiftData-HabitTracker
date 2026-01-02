@@ -18,5 +18,6 @@ class HabitEntry {
         self.date = date
         self.completed = completed
         self.habit = habit
+        
     }
 }

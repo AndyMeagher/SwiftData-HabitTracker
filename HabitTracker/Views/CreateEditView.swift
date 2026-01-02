@@ -17,7 +17,9 @@ struct CreateEditView: View {
     @State var name: String = ""
     @State var selectedDays: Set<DayOfWeek> =  Set(DayOfWeek.allCases)
     @State var selectedColor: ColorPalette = ColorPalette.labelColors.randomElement() ?? .brightBlue
-    
+    @FocusState private var textFieldIsFocused: Bool
+    @State var showSuggestionPicker: Bool = false
+
     var body: some View {
         HStack{
             Spacer()
@@ -29,89 +31,101 @@ struct CreateEditView: View {
                     .scaledToFit()
                     .frame(width: 20, height: 20)
                     .tint(.black)
-            }.padding()
+            }.padding(20)
         }
-        VStack(alignment: .leading) {
-            Text("I will,")
-            TextField("Name your habit", text: $name)
-                .padding()
-                .textFieldStyle(OutlinedTextFieldStyle())
-            Spacer()
-            Text("on the following days:")
-            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 12), count: 3), spacing: 12) {
-                
-                ForEach(DayOfWeek.allCases, id: \.self) { day in
-                    let daySelected = selectedDays.contains(day)
-                    HStack{
-                        Text(day.displayName).frame(maxWidth: .infinity, alignment: .center)
-                        if daySelected{
-                            Image(systemName: "checkmark")
-                                .font(.title2)
-                                .foregroundStyle(.white)
-                        }else{
-                            
-                        }
-                    }.foregroundStyle(daySelected ? Color.white : Color.gray)
-                        .padding()
-                        .background(daySelected ? Color.indigo : Color.blue.opacity(0.1))
-                        .cornerRadius(8)
-                        .onTapGesture{
-                            if daySelected{
-                                selectedDays.remove(day)
-                                return
-                            }
-                            selectedDays.insert(day)
-                        }
+        ScrollView {
+            VStack(alignment: .leading, spacing: 20) {
+                Text("I will,")
+                TextField("Name your habit", text: $name)
+                    .focused($textFieldIsFocused)
+                    .padding()
+                    .textFieldStyle(OutlinedTextFieldStyle())
+                HStack{
+                    Text("or...")
+                    Button(action: {
+                        showSuggestionPicker.toggle()
+                    }) {
+                        Text("Suggest a habit")
+                    }
                 }
-            }
-            
-            Spacer()
-            Text("select color:")
-            HStack{
-                ForEach(ColorPalette.labelColors, id: \.self) { labelColor in
-                    ZStack{
-                        Circle().fill(labelColor.color).onTapGesture{
+                Text("on the following days:")
+                LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 12), count: 3), spacing: 12) {
+                    ForEach(DayOfWeek.allCases, id: \.self) { day in
+                        let daySelected = selectedDays.contains(day)
+                        HStack{
+                            Text(day.displayName).frame(maxWidth: .infinity, alignment: .center)
+                            if daySelected{
+                                Image(systemName: "checkmark")
+                                    .font(.title2)
+                                    .foregroundStyle(.white)
+                            }
+                        }.foregroundStyle(daySelected ? Color.white : Color.gray)
+                            .padding()
+                            .background(daySelected ? Color.indigo : Color.blue.opacity(0.1))
+                            .cornerRadius(8)
+                            .onTapGesture{
+                                if daySelected{
+                                    selectedDays.remove(day)
+                                    return
+                                }
+                                selectedDays.insert(day)
+                            }
+                    }
+                }
+                Text("select color:")
+                HStack{
+                    ForEach(ColorPalette.labelColors, id: \.self) { labelColor in
+                        ZStack{
+                            Circle().fill(labelColor.color).onTapGesture{
+                                selectedColor = labelColor
+                            }
+                            if selectedColor.id == labelColor.id{
+                                Image(systemName: "checkmark")
+                                    .font(.title2)
+                                    .foregroundStyle(.white)
+                            }
+                        }.onTapGesture{
                             selectedColor = labelColor
                         }
-                        if selectedColor.id == labelColor.id{
-                            Image(systemName: "checkmark")
-                                .font(.title2)
-                                .foregroundStyle(.white)
+                    }
+                }
+                HStack{
+                    Spacer()
+                    Button("Commit") {
+                        if let _ = habit{
+                            habit?.name = name
+                            habit?.assignedDays = Array(selectedDays)
+                            habit?.labelColor = selectedColor
+                        }else{
+                            let habit = Habit(name: name, labelColor: selectedColor, assignedDays: Array(selectedDays))
+                            modelContext.insert(habit)
                         }
-                    }.onTapGesture{
-                        selectedColor = labelColor
+                        onDismiss?()
                     }
+                    .disabled(name.isEmpty)
+                    .buttonStyle(CustomButtonStyle())
+                    Spacer()
+                }
+                
+            }
+            .onAppear{
+                if let habitToEdit = habit{
+                    name = habitToEdit.name
+                    selectedDays = Set(habitToEdit.assignedDays)
+                    selectedColor = habitToEdit.labelColor
                 }
             }
-            Spacer()
-            HStack{
-                Spacer()
-                Button("Commit") {
-                    if let _ = habit{
-                        habit?.name = name
-                        habit?.assignedDays = Array(selectedDays)
-                        habit?.labelColor = selectedColor
-                    }else{
-                        let habit = Habit(name: name, labelColor: selectedColor, assignedDays: Array(selectedDays))
-                        modelContext.insert(habit)
-                    }
-                    onDismiss?()
-                }
-                .disabled(name.isEmpty)
-                .buttonStyle(CustomButtonStyle())
-                Spacer()
+            .ignoresSafeArea(.keyboard, edges: .bottom)
+            .padding()
+            .contentShape(Rectangle())
+            .onTapGesture {
+                textFieldIsFocused = false
             }
-            
-        }
-        .onAppear{
-            if let habitToEdit = habit{
-                name = habitToEdit.name
-                selectedDays = Set(habitToEdit.assignedDays)
-                selectedColor = habitToEdit.labelColor
+        }.navigationDestination(isPresented: $showSuggestionPicker) {
+            SuggestionPicker(){ suggestion in
+                name = suggestion.name
             }
         }
-        .ignoresSafeArea(.keyboard, edges: .bottom)
-        .padding()
     }
 }
 

@@ -28,7 +28,7 @@ struct DateListView: View {
                     }
                 }
             }
-            .contentMargins(.trailing, 20, for: .scrollContent)
+            .contentMargins([.leading,.trailing], 20, for: .scrollContent)
             .scrollIndicators(.hidden)
             .onAppear {
                 proxy.scrollTo(selectedDate.hashValue)

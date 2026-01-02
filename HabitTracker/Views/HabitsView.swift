@@ -24,7 +24,7 @@ struct HabitsView: View {
     @Query var habits: [Habit]
     @State private var activeSheet: ActiveSheet?
     @Environment(\.modelContext) private var modelContext
-
+    
     var body: some View {
         VStack{
             HStack{
@@ -65,12 +65,17 @@ struct HabitsView: View {
         }.sheet(item: $activeSheet) { sheet in
             switch sheet {
             case .create:
-                CreateEditView{
-                    activeSheet = nil
+                NavigationStack{
+                    CreateEditView{
+                        activeSheet = nil
+                    }
                 }
+               
             case .edit(let habit):
-                CreateEditView(habit: habit){
-                    activeSheet = nil
+                NavigationStack{
+                    CreateEditView(habit: habit){
+                        activeSheet = nil
+                    }
                 }
             }
         }

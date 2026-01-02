@@ -1,0 +1,31 @@
+# Xcode
+## User settings
+xcuserdata/
+*.hmap
+
+## App packaging
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+## Playgrounds
+timeline.xctimeline
+playground.xcworkspace
+
+# Swift Package Manager
+.swiftpm
+.build/
+Packages/
+# Package.resolved is often committed to ensure consistent dependency versions across the team,
+# but can be ignored if desired.
+
+
+
+
+# macOS system files
+.DS_Store
+
+# Misc
+*.moved-aside
+*.xcuserstate
+DerivedData/

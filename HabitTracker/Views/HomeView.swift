@@ -36,7 +36,7 @@ struct HomeView: View {
     }
     
     var availableDates : [Date] {
-        let oldestDate = habits.map{$0.createdAt}.min() ?? Date()
+        let oldestDate = habits.map{$0.createdAt}.min() ?? Calendar.current.startOfDay(for: Date())
         return Calendar.current.getDates(from: oldestDate)
     }
     
@@ -49,16 +49,11 @@ struct HomeView: View {
     var body: some View {
         
         VStack{
-            HStack{
-                Text("Habit Tracker:")
-                    .font(Font.custom("Copperplate", size: 26))
-                    .padding()
-                Spacer()
-            }
+            Text("Habit Tracker").padding(.bottom)
             DateListView(availableDates: availableDates, selectedDate: $selectedDate)
-            
+            QuoteView(selectedDate: $selectedDate)
             if pendingDayHabits.isEmpty && completedDayHabits.isEmpty {
-                Text("You haven't committed any habits for this date yet.").padding(.vertical, 50)
+                Text("You haven't committed any habits for this date yet.").padding(50)
             }else{
                 if pendingDayHabits.isEmpty  {
                     Text("Congrats!\nYou've Completed all your habits for this day 🎉")
@@ -116,7 +111,7 @@ struct HomeView: View {
                 .listStyle(.plain)
                 .background(Color.clear)
             }
-            
+            Spacer()
         }
     }
     
