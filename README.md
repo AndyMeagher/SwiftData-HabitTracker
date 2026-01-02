@@ -1,7 +1,10 @@
-### Simple Habit Tracker
+### Simple Habit Tracker 
 
-**Purpose**: Build a simple CRUD app to get familiar with SwiftUI and SwiftData for data storage persistence. 
+__SwiftData__: Offline data persistence and storage
 
-**Todo**: Continue building out features for accessibility and testing
+__Motivational Quote of the Day__: Networking layer with responses saved in local cache
 
-![recording](https://github.com/user-attachments/assets/876d25c1-8b95-41f0-ad82-8abf36db8981)
+__AI Agent Suggestion Picker__: Motivational coach to help you think of habits
+
+### TODO: 
+Build out agent tools and clean up for accesibility and tessting
